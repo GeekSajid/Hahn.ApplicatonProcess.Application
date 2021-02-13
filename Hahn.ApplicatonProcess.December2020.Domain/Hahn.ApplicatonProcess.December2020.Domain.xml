@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Hahn.ApplicatonProcess.December2020.Domain</name>
+    </assembly>
+    <members>
+        <member name="P:Hahn.ApplicatonProcess.December2020.Domain.DTO.ApplicantDTO.Name">
+            <summary>
+            Applicant's Name
+            </summary>
+            <example>Shahriar</example>
+        </member>
+        <member name="P:Hahn.ApplicatonProcess.December2020.Domain.DTO.ApplicantDTO.FamilyName">
+            <summary>
+            Applicant's Family Name or surname
+            </summary>
+            <example>Mahmud</example>
+        </member>
+        <member name="P:Hahn.ApplicatonProcess.December2020.Domain.DTO.ApplicantDTO.Address">
+            <summary>
+            Applicant's Address
+            </summary>
+            <example>Karwan Bazar,Dhaka</example>
+        </member>
+        <member name="P:Hahn.ApplicatonProcess.December2020.Domain.DTO.ApplicantDTO.CountryOfOrigin">
+            <summary>
+            Applicant's Birth Country
+            </summary>
+            <example>Bangladesh</example>
+        </member>
+        <member name="P:Hahn.ApplicatonProcess.December2020.Domain.DTO.ApplicantDTO.EmailAddress">
+            <summary>
+            Applicant's Email Address
+            </summary>
+            <example>abc@gmail.com</example>
+        </member>
+        <member name="P:Hahn.ApplicatonProcess.December2020.Domain.DTO.ApplicantDTO.Age">
+            <summary>
+            Age in years
+            </summary>
+            <example>25</example>
+        </member>
+    </members>
+</doc>
