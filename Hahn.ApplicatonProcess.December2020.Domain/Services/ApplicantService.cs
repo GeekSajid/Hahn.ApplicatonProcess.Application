@@ -1,9 +1,12 @@
 ﻿using Hahn.ApplicatonProcess.December2020.Data.Entity;
 using Hahn.ApplicatonProcess.December2020.Data.UnitOfWork;
 using Hahn.ApplicatonProcess.December2020.Domain.DTO;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using static Hahn.ApplicatonProcess.December2020.Domain.Services.ApplicantService;
 
@@ -54,6 +57,7 @@ namespace Hahn.ApplicatonProcess.December2020.Domain.Services
             {
                 //Used for Checking if email is already being used by another applicant
                 var checkAvailabilityEmail = uow.ApplicantRepository.Get(x => x.EmailAddress == applicant.EmailAddress).FirstOrDefault();
+                var previousHiredStatus = uow.ApplicantRepository.Get(x => x.Id == applicant.Id).FirstOrDefault().Hired;
 
                 if (applicant.Id > 0)
                 {
@@ -74,6 +78,41 @@ namespace Hahn.ApplicatonProcess.December2020.Domain.Services
 
                         uow.ApplicantRepository.Update(checkAvailabilityEmail);
                         uow.Commit();
+
+                        // Sends Mail if applicant's hiring status changes
+                        if (previousHiredStatus != applicant.Hired)
+                        {
+                            List<string> recepient = new List<string>() {
+                                applicant.EmailAddress
+                            };
+                            if (applicant.Hired)
+                            {
+                                var mail = new SendEmail()
+                                {
+                                    Subject = "Application Status",
+                                    Body = "Congratulations " + applicant.Name + "! " + "You have been Hired by Hahn Softwareentwicklung!",
+                                    FromMail = "apimailsendergeek@gmail.com",
+                                    ToMail = recepient,
+                                    Password = "api@123mail",
+                                };
+                                var mailStatus = SendEmailToUrl(mail);
+
+                            }
+                            else
+                            {
+                                var mail = new SendEmail()
+                                {
+                                    Subject = "Application Status",
+                                    Body = "Sorry " + applicant.Name + ", " + "You're hiring process have been halted or cancelled. Contact our support hotline for details",
+                                    FromMail = "apimailsendergeek@gmail.com",
+                                    ToMail = recepient,
+                                    Password = "api@123mail",
+                                };
+                                var mailStatus = SendEmailToUrl(mail);
+                            }
+
+                        }
+
                         return true;
 
                     }
@@ -140,6 +179,51 @@ namespace Hahn.ApplicatonProcess.December2020.Domain.Services
                 return false;
             }
         }
+
+        #region Email helper
+        public static string SendEmailToUrl(SendEmail model)
+        {
+            try
+            {
+                string path = /*System.Configuration.ConfigurationManager.AppSettings["email_send_url"]*/"http://103.192.157.43/service/api/customeMailSender";
+
+                string BaseUrl = path;
+                var content2 = JsonConvert.SerializeObject(model);
+                HttpContent content = new StringContent(content2, Encoding.UTF8, "application/json");
+
+                var client = new HttpClient { BaseAddress = new Uri(BaseUrl) };
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var uri = new Uri(BaseUrl);
+
+                HttpResponseMessage result = client.PostAsync(uri, content).Result;
+
+                var jsonString = result.Content.ReadAsStringAsync();
+                jsonString.Wait();
+
+                return jsonString.Result;
+            }
+            catch (Exception ex)
+            {
+                return "Error " + ex.ToString();
+            }
+        }
+
+        public class SendEmail
+        {
+            public SendEmail()
+            {
+                secretkey = "OTUxKCUhQCM=";
+            }
+            public string secretkey { get; set; }
+            public string FromMail { get; set; }
+            public List<string> ToMail { get; set; }
+            public List<string> BccList { get; set; }
+            public string Subject { get; set; }
+            public string Body { get; set; }
+            public string Password { get; set; }
+        }
+        #endregion
 
         public interface IApplicantService
         {

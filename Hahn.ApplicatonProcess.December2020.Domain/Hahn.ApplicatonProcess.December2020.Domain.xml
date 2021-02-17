@@ -40,5 +40,8 @@
             </summary>
             <example>25</example>
         </member>
+        <member name="P:Hahn.ApplicatonProcess.December2020.Domain.DTO.ApplicantDTO.Hired">
+            <example>false</example>
+        </member>
     </members>
 </doc>

@@ -35,6 +35,7 @@ namespace Hahn.ApplicatonProcess.December2020.Web
             {
                 opt.RegisterValidatorsFromAssemblyContaining(typeof(ApplicantValidator));
             });
+            services.AddCors();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
@@ -83,7 +84,10 @@ namespace Hahn.ApplicatonProcess.December2020.Web
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors(x => x
+               .AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader());
             app.UseRouting();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
