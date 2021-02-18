@@ -50,15 +50,12 @@ namespace Hahn.ApplicatonProcess.December2020.Domain.DTO
     {
         public ApplicantValidator()
         {
-            RuleSet("all", () =>
-            {
-                RuleFor(x => x.Name).NotNull().WithMessage("Name is required").MinimumLength(5).WithMessage("Name must be at least 5 Characters");
-                RuleFor(x => x.FamilyName).NotNull().WithMessage("FamilyName is required").MinimumLength(5).WithMessage("FamilyName must be at least 5 Characters");
-                RuleFor(x => x.Address).NotNull().WithMessage("Address is required").MinimumLength(10).WithMessage("Address must be at least 10 Characters");
-                RuleFor(x => x.CountryOfOrigin).NotNull().WithMessage("CountryOfOrigin is required").Must(ValidCountry).WithMessage("CountryOfOrigin must be a valid country");
-                RuleFor(x => x.EmailAddress).NotNull().WithMessage("EmailAddress is required").EmailAddress().WithMessage("EmailAddress must be a Valid email");
-                RuleFor(x => x.Age).NotNull().WithMessage("Age is required").InclusiveBetween(20, 60).WithMessage("Age must be between 20 and 60");
-            });
+            RuleFor(x => x.Name).NotNull().WithMessage("Name is required").MinimumLength(5).WithMessage("Name must be at least 5 Characters");
+            RuleFor(x => x.FamilyName).NotNull().WithMessage("FamilyName is required").MinimumLength(5).WithMessage("FamilyName must be at least 5 Characters");
+            RuleFor(x => x.Address).NotNull().WithMessage("Address is required").MinimumLength(10).WithMessage("Address must be at least 10 Characters");
+            RuleFor(x => x.CountryOfOrigin).NotNull().WithMessage("CountryOfOrigin is required").Must(ValidCountry).WithMessage("CountryOfOrigin must be a valid country");
+            RuleFor(x => x.EmailAddress).NotNull().WithMessage("EmailAddress is required").EmailAddress().WithMessage("EmailAddress must be a Valid email");
+            RuleFor(x => x.Age).NotNull().WithMessage("Age is required").InclusiveBetween(20, 60).WithMessage("Age must be between 20 and 60");
         }
 
         private bool ValidCountry(string country)

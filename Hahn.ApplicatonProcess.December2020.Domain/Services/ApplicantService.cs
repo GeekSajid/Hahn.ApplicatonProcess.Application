@@ -57,7 +57,7 @@ namespace Hahn.ApplicatonProcess.December2020.Domain.Services
             {
                 //Used for Checking if email is already being used by another applicant
                 var checkAvailabilityEmail = uow.ApplicantRepository.Get(x => x.EmailAddress == applicant.EmailAddress).FirstOrDefault();
-                var previousHiredStatus = uow.ApplicantRepository.Get(x => x.Id == applicant.Id).FirstOrDefault().Hired;
+                var previousHiredStatus = uow.ApplicantRepository.Get(x => x.Id == applicant.Id).FirstOrDefault()?.Hired;
 
                 if (applicant.Id > 0)
                 {

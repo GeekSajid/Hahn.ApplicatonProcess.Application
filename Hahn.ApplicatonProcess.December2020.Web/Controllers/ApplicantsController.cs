@@ -49,7 +49,7 @@ namespace Hahn.ApplicatonProcess.December2020.Web.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutApplicant([FromRoute] int id, [FromBody] ApplicantDTO applicant)
         {
-            if (id != applicant.Id)
+            if (id != applicant.Id||!ModelState.IsValid)
             {
                 return BadRequest();
             }
@@ -73,17 +73,25 @@ namespace Hahn.ApplicatonProcess.December2020.Web.Controllers
         [HttpPost]
         public async Task<ActionResult<ApplicantDTO>> PostApplicant([FromBody] ApplicantDTO applicant)
         {
-            if (_applicantService.CreateOrUpdateApplicant(applicant)) 
+            if (ModelState.IsValid)
             {
-                var savedApplicant = _applicantService.GetAllApplicant().Where(x => x.EmailAddress == applicant.EmailAddress).FirstOrDefault();
-                return CreatedAtAction("GetApplicant", new { id = savedApplicant.Id }, applicant);
+                if (_applicantService.CreateOrUpdateApplicant(applicant))
+                {
+                    var savedApplicant = _applicantService.GetAllApplicant().Where(x => x.EmailAddress == applicant.EmailAddress).FirstOrDefault();
+                    return CreatedAtAction("GetApplicant", new { id = savedApplicant.Id }, applicant);
+                }
+                else
+                {
+                    var applicantJsonStr = JsonConvert.SerializeObject(applicant);
+                    _logger.Error("Applicant Creation failed for following applicant:" + applicantJsonStr);
+                    return BadRequest();
+                }
             }
             else
             {
-                var applicantJsonStr = JsonConvert.SerializeObject(applicant);
-                _logger.Error("Applicant Creation failed for following applicant:" + applicantJsonStr);
                 return BadRequest();
             }
+            
         }
 
         // DELETE: api/Applicants/5
